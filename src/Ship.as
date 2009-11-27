@@ -43,10 +43,7 @@ package
 			{
 				//Space bar was pressed!  FIRE A BULLET
 				var b:FlxSprite = bullets[bulletIndex];	//Figure out which bullet to fire
-				b.exists = true;						//Make sure the bullet exists
-				b.dead = false;
-				b.x = x + width / 2 - b.width;			//Set the horizontal position to our middle
-				b.y = y + height / 2 - b.height;		//Set the vertical position to our top
+				b.reset(x + width / 2 - b.width, y + height / 2 - b.height);
 				b.angle = angle;
 				b.velocity = FlxG.rotatePoint(150,0,0,0,b.angle);
 				b.velocity.x += velocity.x;

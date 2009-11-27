@@ -29,13 +29,13 @@ package
 			// which requires a little extra math to make sure the graphics don't disappear
 			// or re-appear too early.
 			if(x < -_bw + offset.x)
-				x = FlxG.width + offset.x;
+				last.x = x = FlxG.width + offset.x;
 			else if(x > FlxG.width + offset.x)
-				x = -_bw + offset.x;
+				last.x = x = -_bw + offset.x;
 			if(y < -_bh + offset.y)
-				y = FlxG.height + offset.y;
+				last.y = y = FlxG.height + offset.y;
 			else if(y > FlxG.height + offset.y)
-				y = -_bh + offset.y;
+				last.y = y = -_bh + offset.y;
 		}
 	}
 }

@@ -18,13 +18,13 @@ package
 			asteroids = Asteroids;						//Save off the asteroid list
 			
 			//Set the asteroids a-rotatin' at a random speed (looks neat)
-			angularVelocity = Math.random()*60 - 30;
+			angularVelocity = Math.random()*120 - 60;
 			
 			//Initialize a splinter of asteroid
 			if((X != 0) || (Y != 0))
 			{
-				x = X;
-				y = Y;
+				last.x = x = X;
+				last.y = y = Y;
 				velocity.x = VelocityX;
 				velocity.y = VelocityY;
 				return;	//Just return, the rest of the code here is for spawning a new large asteroid
@@ -40,29 +40,29 @@ package
 			{
 				if(Math.random() < 0.5)	//Appears on the left
 				{
-					x = -64 + offset.x;
+					last.x = x = -64 + offset.x;
 					velocity.x = initial_velocity / 2 + Math.random() * initial_velocity;
 				}
 				else					//Appears on the right
 				{
-					x = FlxG.width + offset.x;
+					last.x = x = FlxG.width + offset.x;
 					velocity.x = -initial_velocity / 2 - Math.random() * initial_velocity;
 				}
-				y = Math.random()*(FlxG.height-height);
+				last.y = y = Math.random()*(FlxG.height-height);
 				velocity.y = Math.random() * initial_velocity * 2 - initial_velocity;
 			}
 			else						//Appearing on top or bottom
 			{
-				x = Math.random()*(FlxG.width-width);
+				last.x = x = Math.random()*(FlxG.width-width);
 				velocity.x = Math.random() * initial_velocity * 2 - initial_velocity;
 				if(Math.random() < 0.5)	//Appears above
 				{
-					y = -64 + offset.y;
+					last.y = y = -64 + offset.y;
 					velocity.y = initial_velocity / 2 + Math.random() * initial_velocity;
 				}
 				else					//Appears below
 				{
-					y = FlxG.height + offset.y;
+					last.y = y = FlxG.height + offset.y;
 					velocity.y = initial_velocity / 2 + Math.random() * initial_velocity;
 				}
 			}
@@ -118,19 +118,25 @@ package
 		
 		//These are basic collision handling routines that make the asteroids bounce off each other.
 		//The default behavior is to simply stop.
-		override public function hitFloor():Boolean
+		override public function hitFloor(Contact:FlxCore=null):Boolean
 		{
-			velocity.y = -velocity.y; return true;
+			velocity.y = -velocity.y;
+			angularVelocity = Math.random()*120 - 60;
+			return true;
 		}
 		
-		override public function hitCeiling():Boolean
+		override public function hitCeiling(Contact:FlxCore=null):Boolean
 		{
-			velocity.y = -velocity.y; return true;
+			velocity.y = -velocity.y;
+			angularVelocity = Math.random()*120 - 60;
+			return true;
 		}
 		
-		override public function hitWall():Boolean
+		override public function hitWall(Contact:FlxCore=null):Boolean
 		{
-			velocity.x = -velocity.x; return true;
+			velocity.x = -velocity.x;
+			angularVelocity = Math.random()*120 - 60;
+			return true;
 		}
 	}
 }
