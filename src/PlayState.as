@@ -71,7 +71,7 @@ package
 			var a:Asteroid = new Asteroid(asteroids);
 			add(a);						//Add it to the state
 			asteroids.add(a);			//Add it to the asteroids list
-			timer = Math.random()*4;	//Reset the timer
+			timer = FlxG.random()*4;	//Reset the timer
 		}
 	}
 }

@@ -18,7 +18,7 @@ package
 			asteroids = Asteroids;						//Save off the asteroid list
 			
 			//Set the asteroids a-rotatin' at a random speed (looks neat)
-			angularVelocity = Math.random()*120 - 60;
+			angularVelocity = FlxG.random()*120 - 60;
 			
 			//Initialize a splinter of asteroid
 			if((X != 0) || (Y != 0))
@@ -36,34 +36,34 @@ package
 			// should come from, and then from there figure out how fast it should go,
 			// and in what direction.  It looks kinda crazy but it's basically the same
 			// block of code repeated twice, once for 'vertical' and once for 'horizontal'
-			if(Math.random() < 0.5) 	//Appearing on the sides
+			if(FlxG.random() < 0.5) 	//Appearing on the sides
 			{
-				if(Math.random() < 0.5)	//Appears on the left
+				if(FlxG.random() < 0.5)	//Appears on the left
 				{
 					last.x = x = -64 + offset.x;
-					velocity.x = initial_velocity / 2 + Math.random() * initial_velocity;
+					velocity.x = initial_velocity / 2 + FlxG.random() * initial_velocity;
 				}
 				else					//Appears on the right
 				{
 					last.x = x = FlxG.width + offset.x;
-					velocity.x = -initial_velocity / 2 - Math.random() * initial_velocity;
+					velocity.x = -initial_velocity / 2 - FlxG.random() * initial_velocity;
 				}
-				last.y = y = Math.random()*(FlxG.height-height);
-				velocity.y = Math.random() * initial_velocity * 2 - initial_velocity;
+				last.y = y = FlxG.random()*(FlxG.height-height);
+				velocity.y = FlxG.random() * initial_velocity * 2 - initial_velocity;
 			}
 			else						//Appearing on top or bottom
 			{
-				last.x = x = Math.random()*(FlxG.width-width);
-				velocity.x = Math.random() * initial_velocity * 2 - initial_velocity;
-				if(Math.random() < 0.5)	//Appears above
+				last.x = x = FlxG.random()*(FlxG.width-width);
+				velocity.x = FlxG.random() * initial_velocity * 2 - initial_velocity;
+				if(FlxG.random() < 0.5)	//Appears above
 				{
 					last.y = y = -64 + offset.y;
-					velocity.y = initial_velocity / 2 + Math.random() * initial_velocity;
+					velocity.y = initial_velocity / 2 + FlxG.random() * initial_velocity;
 				}
 				else					//Appears below
 				{
 					last.y = y = FlxG.height + offset.y;
-					velocity.y = initial_velocity / 2 + Math.random() * initial_velocity;
+					velocity.y = initial_velocity / 2 + FlxG.random() * initial_velocity;
 				}
 			}
 		}
@@ -96,7 +96,7 @@ package
 				initial_velocity *= 3;
 			}
 			//Figure out how many chunks to generate
-			var numChunks:int = 2 + Math.random()*3;
+			var numChunks:int = 2 + FlxG.random()*3;
 			//For each chunk generate a new asteroid, filling in old slots in the list whenever possible.
 			for(var i:uint = 0; i < numChunks; i++)
 			{
@@ -109,8 +109,8 @@ package
 				//Whether or not we found one, slot is set to the correct value now,
 				// so we can create our new asteroid and add it to the state and the list.
 				asteroids[slot] = new Asteroid(	asteroids, x + width / 2, y + height / 2, 
-												Math.random() * initial_velocity * 2 - initial_velocity,
-												Math.random() * initial_velocity * 2 - initial_velocity,
+												FlxG.random() * initial_velocity * 2 - initial_velocity,
+												FlxG.random() * initial_velocity * 2 - initial_velocity,
 												size );
 				FlxG.state.add(asteroids[slot]);
 			}								
@@ -121,21 +121,21 @@ package
 		override public function hitFloor(Contact:FlxCore=null):Boolean
 		{
 			velocity.y = -velocity.y;
-			angularVelocity = Math.random()*120 - 60;
+			angularVelocity = FlxG.random()*120 - 60;
 			return true;
 		}
 		
 		override public function hitCeiling(Contact:FlxCore=null):Boolean
 		{
 			velocity.y = -velocity.y;
-			angularVelocity = Math.random()*120 - 60;
+			angularVelocity = FlxG.random()*120 - 60;
 			return true;
 		}
 		
 		override public function hitWall(Contact:FlxCore=null):Boolean
 		{
 			velocity.x = -velocity.x;
-			angularVelocity = Math.random()*120 - 60;
+			angularVelocity = FlxG.random()*120 - 60;
 			return true;
 		}
 	}
