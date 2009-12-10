@@ -5,13 +5,13 @@ package
 	//This is the class declaration for the little player ship that you fly around in
 	public class Ship extends WrapSprite
 	{
-		private var bullets:FlxArray;		//Refers to the bullets you can shoot at enemies
+		private var bullets:Array;		//Refers to the bullets you can shoot at enemies
 		private var bulletIndex:int;		//Keeps track of where in the list of bullets we are
 		
 		[Embed(source="ship.png")] private var ImgShip:Class;	//Graphic of the player's ship
 		
 		//This function creates the ship, taking the list of bullets as a parameter
-		public function Ship(Bullets:FlxArray)
+		public function Ship(Bullets:Array)
 		{
 			super(ImgShip, FlxG.width/2-8, FlxG.height/2-8);
 			bullets = Bullets;	//Save a reference to the bullets array
@@ -19,6 +19,7 @@ package
 			
 			angle = -90;		//Start the ship pointed upward
 			maxThrust = 90;		//Cap the thrust at 90p/s2
+			antialiasing = true;//Smoother rotations
 		}
 		
 		//The main game loop function

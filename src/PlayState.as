@@ -7,8 +7,8 @@ package
 	public class PlayState extends FlxState
 	{
 		private var ship:Ship;			//Refers to the little player ship
-		private var bullets:FlxArray;	//A list of the bullets you shoot at the asteroids
-		private var asteroids:FlxArray;	//A list of all the asteroids 
+		private var bullets:Array;	//A list of the bullets you shoot at the asteroids
+		private var asteroids:Array;	//A list of all the asteroids 
 		private var timer:Number;		//A timer to decide when to make a new asteroid
 		
 		public function PlayState()
@@ -16,12 +16,12 @@ package
 			var i:int;
 			
 			//Initialize the list of asteroids
-			asteroids = new FlxArray();
+			asteroids = new Array();
 			addAsteroid();
 			
 			//Then instantiate the bullets you fire at your enemies.
 			var s:FlxSprite;
-			bullets = new FlxArray();	//Initializing the array is very important and easy to forget!
+			bullets = new Array();	//Initializing the array is very important and easy to forget!
 			for(i = 0; i < 32; i++)		//Create 32 bullets for the player to recycle
 			{
 				//Instantiate a new 2x8 generic sprite offscreen
@@ -31,7 +31,7 @@ package
 				s.offset.x = -1;
 				s.offset.y = -4;
 				add(s);			//Add it to the state
-				bullets.add(s);	//Add it to the array of player bullets
+				bullets.push(s);	//Add it to the array of player bullets
 			}
 			
 			//Initialize the ship and add it to the layer
@@ -70,7 +70,7 @@ package
 			//First create a new asteroid
 			var a:Asteroid = new Asteroid(asteroids);
 			add(a);						//Add it to the state
-			asteroids.add(a);			//Add it to the asteroids list
+			asteroids.push(a);			//Add it to the asteroids list
 			timer = FlxG.random()*4;	//Reset the timer
 		}
 	}

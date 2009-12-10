@@ -5,17 +5,18 @@ package
 	//This is the class used for all the different asteroid sizes
 	public class Asteroid extends WrapSprite
 	{
-		private var asteroids:FlxArray;
+		private var asteroids:Array;
 		
 		[Embed(source="small.png")] private var ImgSmall:Class;
 		[Embed(source="medium.png")] private var ImgMedium:Class;
 		[Embed(source="large.png")] private var ImgLarge:Class;
 		
 		//This is where we create the actual asteroid
-		public function Asteroid(Asteroids:FlxArray,X:int=0,Y:int=0,VelocityX:Number=0,VelocityY:Number=0,Size:Class=null)
+		public function Asteroid(Asteroids:Array,X:int=0,Y:int=0,VelocityX:Number=0,VelocityY:Number=0,Size:Class=null)
 		{
 			super((Size == null) ? ImgLarge : Size);	//If no graphic was provided, assume its the biggest one
 			asteroids = Asteroids;						//Save off the asteroid list
+			antialiasing = true;						//Smoother rotations
 			
 			//Set the asteroids a-rotatin' at a random speed (looks neat)
 			angularVelocity = FlxG.random()*120 - 60;
