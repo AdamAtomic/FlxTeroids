@@ -14,7 +14,7 @@ package
 		//This is where we create the actual asteroid
 		public function Asteroid(Asteroids:Array,X:int=0,Y:int=0,VelocityX:Number=0,VelocityY:Number=0,Size:Class=null)
 		{
-			super((Size == null) ? ImgLarge : Size);	//If no graphic was provided, assume its the biggest one
+			super(0,0,(Size == null) ? ImgLarge : Size);	//If no graphic was provided, assume its the biggest one
 			asteroids = Asteroids;						//Save off the asteroid list
 			antialiasing = true;						//Smoother rotations
 			

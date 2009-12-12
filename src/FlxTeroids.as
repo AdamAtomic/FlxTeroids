@@ -8,7 +8,8 @@ package
 	{
 		public function FlxTeroids()
 		{
-			super(320,240,MenuState,2,0xff000000,false); //logo off for dev
+			super(320,240,MenuState);
+			showLogo = false;
 		}
 	}
 }

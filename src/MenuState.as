@@ -8,8 +8,14 @@ package
 		public function MenuState()
 		{
 			//A couple of simple text fields
-			add(new FlxText(0,FlxG.height/2-10,FlxG.width,"FlxTeroids",0xffffffff,null,16,"center"));
-			add(new FlxText(0,FlxG.height-20,FlxG.width," click to play",0xffffffff,null,8,"center"));
+			var t:FlxText;
+			t = new FlxText(0,FlxG.height/2-10,FlxG.width,"FlxTeroids");
+			t.size = 16;
+			t.alignment = "center";
+			add(t);
+			t = new FlxText(0,FlxG.height-20,FlxG.width,"click to play");
+			t.alignment = "center";
+			add(t);
 		}
 
 		override public function update():void

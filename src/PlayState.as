@@ -25,12 +25,13 @@ package
 			for(i = 0; i < 32; i++)		//Create 32 bullets for the player to recycle
 			{
 				//Instantiate a new 2x8 generic sprite offscreen
-				s = new WrapSprite(null, -100, -100, false, false, 8, 2, 0xffffffff);
-				s.width = 10;	//We're going to exaggerate the bullet's bounding box a little
+				s = new WrapSprite(-100, -100);
+				s.createGraphic(8, 2);
+				s.width = 10;		//We're going to exaggerate the bullet's bounding box a little
 				s.height = 10;
 				s.offset.x = -1;
 				s.offset.y = -4;
-				add(s);			//Add it to the state
+				add(s);				//Add it to the state
 				bullets.push(s);	//Add it to the array of player bullets
 			}
 			

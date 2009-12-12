@@ -13,7 +13,7 @@ package
 		//This function creates the ship, taking the list of bullets as a parameter
 		public function Ship(Bullets:Array)
 		{
-			super(ImgShip, FlxG.width/2-8, FlxG.height/2-8);
+			super(FlxG.width/2-8, FlxG.height/2-8, ImgShip);
 			bullets = Bullets;	//Save a reference to the bullets array
 			bulletIndex = 0;	//Initialize our list marker to the first entry
 			
@@ -44,7 +44,7 @@ package
 			{
 				//Space bar was pressed!  FIRE A BULLET
 				var b:FlxSprite = bullets[bulletIndex];	//Figure out which bullet to fire
-				b.reset(x + width / 2 - b.width, y + height / 2 - b.height);
+				b.reset(x + (width - b.width) / 2, y + (height - b.height) / 2);
 				b.angle = angle;
 				b.velocity = FlxG.rotatePoint(150,0,0,0,b.angle);
 				b.velocity.x += velocity.x;

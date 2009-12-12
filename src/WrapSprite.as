@@ -8,9 +8,9 @@ package
 	{
 		//This is the constructor - it is just like the FlxSprite constructor,
 		// except we shrink the sprite's bounding box a little bit for more forgiving play.
-		public function WrapSprite(Graphic:Class=null, X:int=0, Y:int=0, Animated:Boolean=false, Reverse:Boolean=false, Width:uint=0, Height:uint=0, Color:uint=0, Unique:Boolean=false)
+		public function WrapSprite(X:int=0, Y:int=0, Graphic:Class=null)
 		{
-			super(Graphic, X, Y, Animated, Reverse, Width, Height, Color, Unique);
+			super(X, Y, Graphic);
 			width *= 0.65
 			height *= 0.65;
 			offset.x = (_bw - width) / 2;
