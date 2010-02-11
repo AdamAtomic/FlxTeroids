@@ -9,7 +9,7 @@ package
 		public function FlxTeroids()
 		{
 			super(320,240,MenuState);
-			showLogo = false;
+			//showLogo = false;
 		}
 	}
 }

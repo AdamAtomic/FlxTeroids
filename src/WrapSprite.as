@@ -11,10 +11,16 @@ package
 		public function WrapSprite(X:int=0, Y:int=0, Graphic:Class=null)
 		{
 			super(X, Y, Graphic);
-			width *= 0.65
-			height *= 0.65;
-			offset.x = (_bw - width) / 2;
-			offset.y = (_bh - height) / 2;
+			alterBoundingBox();
+		}
+		
+		//This function reduces the size of the bounding box
+		public function alterBoundingBox():void
+		{
+			width = width*0.55;
+			height = height*0.55;
+			offset.x = (frameWidth - width) / 2;
+			offset.y = (frameHeight - height) / 2;
 		}
 		
 		//The game loop function
@@ -28,14 +34,14 @@ package
 			//It looks kind of crazy but that's because we done shrank up the bounding boxes,
 			// which requires a little extra math to make sure the graphics don't disappear
 			// or re-appear too early.
-			if(x < -_bw + offset.x)
-				last.x = x = FlxG.width + offset.x;
+			if(x < -frameWidth + offset.x)
+				x = FlxG.width + offset.x;
 			else if(x > FlxG.width + offset.x)
-				last.x = x = -_bw + offset.x;
-			if(y < -_bh + offset.y)
-				last.y = y = FlxG.height + offset.y;
+				x = -frameWidth + offset.x;
+			if(y < -frameHeight + offset.y)
+				y = FlxG.height + offset.y;
 			else if(y > FlxG.height + offset.y)
-				last.y = y = -_bh + offset.y;
+				y = -frameHeight + offset.y;
 		}
 	}
 }

@@ -32,7 +32,7 @@ package
 			if(FlxG.keys.RIGHT)
 				angularVelocity += 240;
 			
-			//This is where thrust is handled - 
+			//This is where thrust is handled
 			thrust = 0;
 			if(FlxG.keys.UP)
 				thrust -= maxThrust*3;
@@ -46,7 +46,7 @@ package
 				var b:FlxSprite = bullets[bulletIndex];	//Figure out which bullet to fire
 				b.reset(x + (width - b.width) / 2, y + (height - b.height) / 2);
 				b.angle = angle;
-				b.velocity = FlxG.rotatePoint(150,0,0,0,b.angle);
+				b.velocity = FlxU.rotatePoint(150,0,0,0,b.angle);
 				b.velocity.x += velocity.x;
 				b.velocity.y += velocity.y;
 				bulletIndex++;							//Increment our bullet list tracker
