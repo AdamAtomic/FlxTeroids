@@ -17,18 +17,19 @@ package
 		//This function reduces the size of the bounding box
 		public function alterBoundingBox():void
 		{
-			width = width*0.55;
-			height = height*0.55;
-			offset.x = (frameWidth - width) / 2;
-			offset.y = (frameHeight - height) / 2;
+			width = width*0.75;
+			height = height*0.75;
+			this.centerOffsets();
 		}
 		
 		//The game loop function
 		override public function update():void
 		{
-			//Always call super.update() unless you really know what you're doing!!
-			super.update();
-			
+			wrap();
+		}
+		
+		public function wrap():void
+		{
 			//This is the actual wrap effect code.  All this is doing is checking to see
 			// if the object went off the screen.  If it did, it moves it to the other side.
 			//It looks kind of crazy but that's because we done shrank up the bounding boxes,

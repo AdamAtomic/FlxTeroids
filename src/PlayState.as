@@ -6,75 +6,96 @@ package
 	// things like check for game over, perform collisions, etc.
 	public class PlayState extends FlxState
 	{
-		protected var _ship:Ship;			//Refers to the little player ship
-		protected var _bullets:FlxGroup;	//A list of the bullets you shoot at the asteroids
-		protected var _asteroids:FlxGroup;	//A list of all the asteroids 
-		protected var _timer:Number;		//A timer to decide when to make a new asteroid
+		public var playerShip:PlayerShip;			//Refers to the little player playerShip
+		public var bullets:FlxGroup;	//A list of the bullets you shoot at the asteroids
+		public var asteroids:FlxGroup;	//A list of all the asteroids 
+		public var timer:Number;		//A timer to decide when to make a new asteroid
 		
 		override public function create():void
 		{
 			FlxG.mouse.hide();
-			var i:int;
+			var i:uint;
+			var sprite:FlxSprite;
 			
-			//Initialize the list of asteroids
-			_asteroids = new FlxGroup();
-			add(_asteroids);
-			Asteroid.group = _asteroids;
-			addAsteroid();
+			//scatter some stars around the background
+			for(i = 0; i < 100; i++)
+			{
+				sprite = new FlxSprite(FlxG.random()*FlxG.width,FlxG.random()*FlxG.height);
+				sprite.makeGraphic(1,1);
+				sprite.active = false;
+				add(sprite);
+			}
+			
+			//Initialize the list of asteroids, and generate a few right off the bat
+			asteroids = new FlxGroup();
+			add(asteroids);
+			spawnAsteroid();
+			spawnAsteroid();
+			spawnAsteroid();
+			
+			//Initialize the playerShip and add it to the layer
+			playerShip = new PlayerShip();
+			add(playerShip);
 			
 			//Then instantiate the bullets you fire at your enemies.
-			var s:FlxSprite;
-			_bullets = new FlxGroup();	//Initializing the array is very important and easy to forget!
-			for(i = 0; i < 32; i++)		//Create 32 bullets for the player to recycle
+			var numBullets:uint = 32;
+			bullets = new FlxGroup(numBullets);
+			for(i = 0; i < numBullets; i++)
 			{
 				//Instantiate a new 2x8 generic sprite offscreen
-				s = new WrapSprite(-100, -100);
-				s.createGraphic(8, 2);
-				s.width = 10;		//We're going to exaggerate the bullet's bounding box a little
-				s.height = 10;
-				s.offset.x = -1;
-				s.offset.y = -4;
-				s.exists = false;
-				_bullets.add(s);	//Add it to the array of player bullets
+				sprite = new WrapSprite(-100, -100);
+				sprite.makeGraphic(8, 2);
+				sprite.width = 10;		//We're going to exaggerate the bullet'sprite bounding box a little
+				sprite.height = 10;
+				sprite.offset.x = -1;
+				sprite.offset.y = -4;
+				sprite.exists = false;
+				bullets.add(sprite);	//Add it to the array of player bullets
 			}
-			add(_bullets);
-			
-			//Initialize the ship and add it to the layer
-			_ship = new Ship(_bullets.members);
-			add(_ship);
+			add(bullets);
 		}
 		
 		//The main game loop function
 		override public function update():void
 		{
 			//Count down the new asteroid timer
-			_timer -= FlxG.elapsed;
-			if(_timer <= 0)
-				addAsteroid();
-			
-			//Perform collisions between the different objects.  Overlap will
-			// check to see if any of those sprites touch, and if they do, it will
-			// call kill() on both of them, which sets 'exists' to false, and 'dead' to true.
-			//You can optionally pass it a callback function if you want more detailed reactions.
-			FlxU.overlap(_bullets, _asteroids);		//Check to see if any bullets overlap any asteroids
-			FlxU.overlap(_asteroids, _ship);			//Check to see if any asteroids overlap the ship
-			FlxU.collide(_asteroids, _asteroids);	//Check for asteroid collisions
+			timer -= FlxG.elapsed;
+			if(timer <= 0)
+				spawnAsteroid();
 				
 			//Pretty much always call the main game loop's parent update.
 			//This goes and calls update on all the objects you added to this state
 			super.update();
 			
+			//Perform collisions between the different objects.  Overlap will
+			// check to see if any of those sprites touch, and if they do, it will
+			// call kill() on both of them, which sets 'exists' to false, and 'dead' to true.
+			//You can optionally pass it a callback function if you want more detailed reactions.
+			FlxG.overlap(bullets, asteroids, stuffHitStuff);	//Check to see if any bullets overlap any asteroids
+			FlxG.overlap(asteroids, playerShip, stuffHitStuff);	//Check to see if any asteroids overlap the playerShip
+			FlxG.collide(asteroids);	//Bounce asteroids off each other
+			
 			//If the player died, reset the game
-			if(!_ship.exists)
-				FlxG.state = new PlayState();
+			if(!playerShip.exists)
+				FlxG.resetState();
+		}
+
+		//Simple overlap handler that just calls "kill()" on the overlapping objects.
+		//In this game, this is called whenever bullets overlap an asteroid,
+		// or when an asteroid overlaps the player's ship.
+		protected function stuffHitStuff(Object1:FlxObject,Object2:FlxObject):void
+		{
+			Object1.kill();
+			Object2.kill();
 		}
 		
 		//This function resets the timer and adds a new asteroid to the game
-		private function addAsteroid():void
+		private function spawnAsteroid():void
 		{
 			//Create a new asteroid and add it to the group
-			_asteroids.add(new Asteroid().create());
-			_timer = FlxU.random()*4;	//Reset the timer
+			var asteroid:Asteroid = asteroids.recycle(Asteroid) as Asteroid;
+			asteroid.create();
+			timer = 1+FlxG.random()*4;	//Reset the timer
 		}
 	}
 }

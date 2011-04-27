@@ -5,8 +5,6 @@ package
 	//This is the class used for all the different asteroid sizes
 	public class Asteroid extends WrapSprite
 	{
-		static public var group:FlxGroup;
-		
 		[Embed(source="small.png")] private var ImgSmall:Class;
 		[Embed(source="medium.png")] private var ImgMedium:Class;
 		[Embed(source="large.png")] private var ImgLarge:Class;
@@ -16,6 +14,7 @@ package
 		public function Asteroid()
 		{
 			super();
+			elasticity = 1; //bouncy!
 			antialiasing = true; //Smooth rotations
 		}
 		
@@ -27,12 +26,18 @@ package
 			visible = true;
 			active = true;
 			solid = true;
-			loadRotatedGraphic((Size == null) ? ImgLarge : Size,100,-1,true,true);
+			loadRotatedGraphic((Size == null) ? ImgLarge : Size,100,-1,false,true);
 			alterBoundingBox();
 			
+			if(Size == null)
+				mass = 9;
+			else if(Size == ImgMedium)
+				mass = 3;
+			else
+				mass = 1;
+			
 			//Set the asteroids a-rotatin' at a random speed (looks neat)
-			angularVelocity = FlxU.random()*120 - 60;
-			angle = FlxU.random()*360;
+			angle = FlxG.random()*360;
 			
 			//Initialize a splinter of asteroid if necessary
 			if((X != 0) || (Y != 0))
@@ -41,6 +46,7 @@ package
 				y = Y;
 				velocity.x = VelocityX;
 				velocity.y = VelocityY;
+				angularVelocity = (FlxU.abs(velocity.x) + FlxU.abs(velocity.y));
 				return this;	//Just return, the rest of the code here is for spawning a new large asteroid
 			}
 			
@@ -50,38 +56,47 @@ package
 			// should come from, and then from there figure out how fast it should go,
 			// and in what direction.  It looks kinda crazy but it's basically the same
 			// block of code repeated twice, once for 'vertical' and once for 'horizontal'
-			if(FlxU.random() < 0.5) 	//Appearing on the sides
+			if(FlxG.random() < 0.5) 	//Appearing on the sides
 			{
-				if(FlxU.random() < 0.5)	//Appears on the left
+				if(FlxG.random() < 0.5)	//Appears on the left
 				{
 					x = -64 + offset.x;
-					velocity.x = initial_velocity / 2 + FlxU.random() * initial_velocity;
+					velocity.x = initial_velocity / 2 + FlxG.random() * initial_velocity;
 				}
 				else					//Appears on the right
 				{
 					x = FlxG.width + offset.x;
-					velocity.x = -initial_velocity / 2 - FlxU.random() * initial_velocity;
+					velocity.x = -initial_velocity / 2 - FlxG.random() * initial_velocity;
 				}
-				y = FlxU.random()*(FlxG.height-height);
-				velocity.y = FlxU.random() * initial_velocity * 2 - initial_velocity;
+				y = FlxG.random()*(FlxG.height-height);
+				velocity.y = FlxG.random() * initial_velocity * 2 - initial_velocity;
 			}
 			else						//Appearing on top or bottom
 			{
-				x = FlxU.random()*(FlxG.width-width);
-				velocity.x = FlxU.random() * initial_velocity * 2 - initial_velocity;
-				if(FlxU.random() < 0.5)	//Appears above
+				if(FlxG.random() < 0.5)	//Appears above
 				{
 					y = -64 + offset.y;
-					velocity.y = initial_velocity / 2 + FlxU.random() * initial_velocity;
+					velocity.y = initial_velocity / 2 + FlxG.random() * initial_velocity;
 				}
 				else					//Appears below
 				{
 					y = FlxG.height + offset.y;
-					velocity.y = initial_velocity / 2 + FlxU.random() * initial_velocity;
+					velocity.y = -initial_velocity / 2 + FlxG.random() * initial_velocity;
 				}
+				x = FlxG.random()*(FlxG.width-width);
+				velocity.x = FlxG.random() * initial_velocity * 2 - initial_velocity;
 			}
 			
+			angularVelocity = (FlxU.abs(velocity.x) + FlxU.abs(velocity.y));
 			return this;
+		}
+		
+		override public function update():void
+		{
+			wrap();
+			
+			if(justTouched(ANY))
+				angularVelocity = (FlxU.abs(velocity.x) + FlxU.abs(velocity.y));
 		}
 		
 		//Asteroids are so simple that we don't even have to override their game loop.
@@ -112,42 +127,20 @@ package
 				initial_velocity *= 3;
 			}
 			//Figure out how many chunks to generate
-			var numChunks:int = 2 + FlxU.random()*3;
+			var numChunks:int = 2 + FlxG.random()*3;
 			//For each chunk generate a new asteroid, filling in old slots in the list whenever possible.
 			for(var i:uint = 0; i < numChunks; i++)
 			{
 				//Figure out the speed and position of the new asteroid chunk
 				var ax:Number = x + width / 2;
 				var ay:Number = y + height / 2;
-				var avx:Number = FlxU.random() * initial_velocity * 2 - initial_velocity;
-				var avy:Number = FlxU.random() * initial_velocity * 2 - initial_velocity;
+				var avx:Number = FlxG.random() * initial_velocity * 2 - initial_velocity;
+				var avy:Number = FlxG.random() * initial_velocity * 2 - initial_velocity;
 				
-				//Figure out if we need to add a new asteroid to the group, or edit an old dead one
-				var a:Asteroid = group.getFirstAvail() as Asteroid;
-				if(a == null)
-					a = group.add(new Asteroid()) as Asteroid;
-				//Generate the actual asteroid
-				a.create(ax,ay,avx,avy,size);
+				//Actually create the new asteroid object in the asteroids group
+				var asteroid:Asteroid = (FlxG.state as PlayState).asteroids.recycle(Asteroid) as Asteroid;
+				asteroid.create(ax,ay,avx,avy,size);
 			}								
-		}
-		
-		//It looks cool if the asteroids change rotation speed when they bump into stuff
-		override public function hitBottom(Contact:FlxObject,Velocity:Number):void
-		{
-			velocity.y = -velocity.y;
-			angularVelocity = FlxU.random()*120 - 60;
-		}
-		
-		override public function hitTop(Contact:FlxObject,Velocity:Number):void
-		{
-			velocity.y = -velocity.y;
-			angularVelocity = FlxU.random()*120 - 60;
-		}
-		
-		override public function hitLeft(Contact:FlxObject,Velocity:Number):void
-		{
-			velocity.x = -velocity.x;
-			angularVelocity = FlxU.random()*120 - 60;
 		}
 	}
 }
